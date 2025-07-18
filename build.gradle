@@ -1,18 +1,32 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+plugins {
+    id 'com.android.application'
+}
 
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
+android {
+    compileSdkVersion 35 // Güncellendi
+
+    useLibrary 'org.apache.http.legacy'
+
+    defaultConfig {
+        applicationId "com.arvinapp.internetsizseslimasallar" // config.json'dan gelecek
+        minSdkVersion 21
+        targetSdkVersion 35 // Güncellendi
+        versionCode 6 // config.json'dan gelecek
+        versionName "5.1.0" // config.json'dan gelecek
+
+        // AdMob App ID için manifest placeholder
+        manifestPlaceholders = [admob_app_id: "ca-app-pub-1981972909540128~2702482048"] // config.json'dan gelecek
     }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:7.4.2'
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
     }
 }
 
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-    }
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.google.android.gms:play-services-ads:22.6.0' // Güncel sürüm
 }
