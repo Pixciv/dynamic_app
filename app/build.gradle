@@ -1,24 +1,6 @@
-// buildscript bloğu önce gelmeli, build betiği için bağımlılıkları tanımlar
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
-    dependencies {
-        // JsonSlurper için gerekli
-        classpath 'org.codehaus.groovy:groovy-json:3.0.21'
-        // Android Gradle Plugin (AGP) bağımlılığı
-        classpath 'com.android.tools.build:gradle:8.1.0'
-    }
-}
-
-// Plugins bloğu, diğer ifadelerden önce gelmeli
 plugins {
-    id 'com.android.application' version '8.1.0' apply false
+    id 'com.android.application'
 }
-
-// Eklentiyi uygula
-apply plugin: 'com.android.application'
 
 // config.json dosyasını oku ve proje özelliklerini ayarla
 def configFile = rootProject.file("config.json")
@@ -75,5 +57,5 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation 'com.google.android.gms:play-services-ads:23.2.0' // Temmuz 2025 itibarıyla en son sürüm
+    implementation 'com.google.android.gms:play-services-ads:23.2.0'
 }
