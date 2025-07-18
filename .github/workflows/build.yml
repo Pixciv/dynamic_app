@@ -22,7 +22,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '17' # <-- BURASI 17 OLARAK GÜNCELLENDİ
+          java-version: '17'
 
       - name: Cache Gradle packages
         uses: actions/cache@v3
