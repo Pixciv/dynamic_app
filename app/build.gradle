@@ -1,11 +1,20 @@
-// build.gradle
+// Move JsonSlurper import and logic inside a script block or task
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        // Add Groovy dependency for JsonSlurper
+        classpath 'org.codehaus.groovy:groovy-json:3.0.21'
+    }
+}
 
-import groovy.json.JsonSlurper
-
-// config.json verisini en başta oku
+// Read config.json and set project properties
 def configFile = rootProject.file("config.json")
 if (configFile.exists()) {
-    def config = new JsonSlurper().parseText(configFile.text)
+    def jsonSlurper = new groovy.json.JsonSlurper()
+    def config = jsonSlurper.parseText(configFile.text)
     project.ext.appId = config.packageName
     project.ext.versionCode = config.versionCode
     project.ext.versionName = config.versionName
@@ -14,20 +23,25 @@ if (configFile.exists()) {
         project.ext.admobAppId = config.admob.appId
         project.ext.bannerAdId = config.admob.bannerId
         project.ext.interstitialAdId = config.admob.interstitialId
-        project.ext.rewardedAdId = config.admob.rewardedId
+        project.ext.rewar
+dedAdId = config.admob.rewardedId
     }
+}
+
+plugins {
+    id 'com.android.application' version '8.1.0' apply false
 }
 
 apply plugin: 'com.android.application'
 
 android {
     namespace project.ext.appId
-    compileSdkVersion 35
+    compileSdk 35
 
     defaultConfig {
         applicationId project.ext.appId
-        minSdkVersion 26
-        targetSdkVersion 35
+        minSdk 26
+        targetSdk 35
         versionCode project.ext.versionCode
         versionName project.ext.versionName
 
@@ -58,5 +72,5 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation 'com.google.android.gms:play-services-ads:22.6.0'
+    implementation 'com.google.android.gms:play-services-ads:23.2.0' // Updated to latest version
 }
