@@ -6,11 +6,15 @@ android {
     compileSdkVersion 35
 
     defaultConfig {
+        // config.json'dan değer alıyoruz, yoksa default veriyoruz
         applicationId project.hasProperty("appId") ? project.appId : "com.example.default"
         minSdkVersion 21
         targetSdkVersion 35
         versionCode project.hasProperty("versionCode") ? project.versionCode.toInteger() : 1
         versionName project.hasProperty("versionName") ? project.versionName : "1.0.0"
+
+        // AdMob App ID manifest placeholder olarak eklenebilir
+        manifestPlaceholders = [admob_app_id: project.hasProperty("admobAppId") ? project.admobAppId : "ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy"]
     }
 
     buildTypes {
@@ -24,13 +28,13 @@ android {
         buildConfig true
     }
 
-    // Java olarak belirtelim çünkü proje Java
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
+// config.json dosyasını root'tan okuyup değerleri projeye set ediyoruz
 def configFile = rootProject.file("config.json")
 if (configFile.exists()) {
     def config = new groovy.json.JsonSlurper().parseText(configFile.text)
@@ -38,8 +42,8 @@ if (configFile.exists()) {
     project.ext.set("versionCode", config.versionCode)
     project.ext.set("versionName", config.versionName)
 
-    // AdMob bilgileri BuildConfig'a aktarılabilir (opsiyonel)
     if (config.admob) {
+        project.ext.set("admobAppId", config.admob.appId)
         android.defaultConfig.buildConfigField "String", "ADMOB_APP_ID", "\"${config.admob.appId}\""
         android.defaultConfig.buildConfigField "String", "BANNER_AD_ID", "\"${config.admob.bannerId}\""
         android.defaultConfig.buildConfigField "String", "INTERSTITIAL_AD_ID", "\"${config.admob.interstitialId}\""
@@ -49,5 +53,5 @@ if (configFile.exists()) {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation 'com.google.android.gms:play-services-ads:22.6.0' // en güncel sürüm
+    implementation 'com.google.android.gms:play-services-ads:22.6.0'
 }
