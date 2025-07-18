@@ -1,4 +1,4 @@
-name: Build Debug APK
+name: Update Gradle Wrapper and Build Debug APK
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build-debug-apk:
+  update-wrapper-and-build:
     runs-on: ubuntu-latest
 
     env:
@@ -33,27 +33,29 @@ jobs:
           key: gradle-cache-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: gradle-cache-${{ runner.os }}-
 
-      - name: Ensure Gradle Wrapper exists
+      - name: Remove existing Gradle wrapper files
         run: |
-          if [ ! -f "./gradlew" ]; then
-            echo "Gradle wrapper bulunamadı, oluşturuluyor..."
-            gradle wrapper
-            git config --global user.name "github-actions"
-            git config --global user.email "actions@github.com"
-            git add gradlew gradlew.bat gradle/wrapper/
-            git commit -m "Add gradle wrapper from workflow"
-            git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }} HEAD:${{ github.ref_name }}
-          else
-            echo "Gradle wrapper zaten mevcut."
-          fi
+          echo "Eski gradle wrapper dosyaları siliniyor..."
+          rm -rf gradlew gradlew.bat gradle/wrapper/
+
+      - name: Generate Gradle wrapper 8.5.1
+        run: |
+          echo "Gradle wrapper 8.5.1 sürümü oluşturuluyor..."
+          ./gradlew wrapper --gradle-version 8.5.1
+        # Eğer gradle yoksa hata verir, alternatif olarak localde oluşturup pushlayabilirsin
+
+      - name: Commit and push updated gradle wrapper files
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+          git add gradlew gradlew.bat gradle/wrapper/
+          git diff --quiet && echo "Değişiklik yok, commit atılmayacak." || (git commit -m "Update gradle wrapper to 8.5.1" && git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }} HEAD:${{ github.ref_name }})
 
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
 
-      - name: Build Debug APK with Gradle 8.5
-        run: ./gradlew assembleDebug --warning-mode all --stacktrace
-        env:
-          JAVA_HOME: /usr/lib/jvm/temurin-17-jdk-amd64
+      - name: Build Debug APK
+        run: ./gradlew assembleDebug --stacktrace
 
       - name: Upload Debug APK artifact
         uses: actions/upload-artifact@v4
