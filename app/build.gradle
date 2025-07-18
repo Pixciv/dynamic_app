@@ -1,3 +1,5 @@
+apply plugin: 'com.android.application'
+
 android {
     namespace project.hasProperty("appId") ? project.appId : "com.example.default"
     compileSdkVersion 35
@@ -27,4 +29,25 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+}
+
+def configFile = rootProject.file("config.json")
+if (configFile.exists()) {
+    def config = new groovy.json.JsonSlurper().parseText(configFile.text)
+    project.ext.set("appId", config.packageName)
+    project.ext.set("versionCode", config.versionCode)
+    project.ext.set("versionName", config.versionName)
+
+    if (config.admob) {
+        project.ext.set("admobAppId", config.admob.appId)
+        android.defaultConfig.buildConfigField "String", "ADMOB_APP_ID", "\"${config.admob.appId}\""
+        android.defaultConfig.buildConfigField "String", "BANNER_AD_ID", "\"${config.admob.bannerId}\""
+        android.defaultConfig.buildConfigField "String", "INTERSTITIAL_AD_ID", "\"${config.admob.interstitialId}\""
+        android.defaultConfig.buildConfigField "String", "REWARDED_AD_ID", "\"${config.admob.rewardedId}\""
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation 'com.google.android.gms:play-services-ads:22.6.0'
 }
