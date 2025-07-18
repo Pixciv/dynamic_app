@@ -32,7 +32,7 @@ jobs:
 
       - name: Initialize new Gradle Wrapper with 8.9
         run: |
-          ./gradlew wrapper --gradle-version 8.9
+          gradle wrapper --gradle-version 8.9
 
       - name: Give execute permission to gradlew
         run: chmod +x ./gradlew
