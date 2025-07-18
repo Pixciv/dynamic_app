@@ -1,3 +1,4 @@
 <resources>
-	<string name="app_name" translatable="false">Sesli Masallar</string>
+    <!-- Bu değer Node.js scripti tarafından config.json'dan dinamik olarak yazılır -->
+    <string name="app_name" translatable="false">Sesli Masallar</string>
 </resources>
