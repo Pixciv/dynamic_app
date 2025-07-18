@@ -5,8 +5,15 @@ buildscript {
     }
     dependencies {
         classpath 'org.codehaus.groovy:groovy-json:3.0.21'
+        classpath 'com.android.tools.build:gradle:8.1.0'
     }
 }
+
+plugins {
+    id 'com.android.application' version '8.1.0' apply false
+}
+
+apply plugin: 'com.android.application'
 
 def configFile = rootProject.file("config.json")
 if (configFile.exists()) {
@@ -22,4 +29,39 @@ if (configFile.exists()) {
         project.ext.interstitialAdId = config.admob.interstitialId
         project.ext.rewardedAdId = config.admob.rewardedId
     }
+}
+
+android {
+    namespace project.ext.appId
+    compileSdk 35
+    defaultConfig {
+        applicationId project.ext.appId
+        minSdk 26
+        targetSdk 35
+        versionCode project.ext.versionCode
+        versionName project.ext.versionName
+        manifestPlaceholders = [admob_app_id: project.ext.admobAppId]
+        buildConfigField "String", "ADMOB_APP_ID", "\"${project.ext.admobAppId}\""
+        buildConfigField "String", "BANNER_AD_ID", "\"${project.ext.bannerAdId}\""
+        buildConfigField "String", "INTERSTITIAL_AD_ID", "\"${project.ext.interstitialAdId}\""
+        buildConfigField "String", "REWARDED_AD_ID", "\"${project.ext.rewardedAdId}\""
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    buildFeatures {
+        buildConfig true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation 'com.google.android.gms:play-services-ads:23.2.0'
 }
