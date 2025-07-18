@@ -32,7 +32,11 @@ jobs:
 
       - name: Initialize new Gradle Wrapper with 8.9
         run: |
-          gradle wrapper --gradle-version 8.9
+          mkdir -p gradle/wrapper
+          curl -sLo gradle-wrapper.zip https://services.gradle.org/distributions/gradle-8.9-bin.zip
+          unzip -q gradle-wrapper.zip -d gradle/wrapper/
+          rm gradle-wrapper.zip
+          ./gradlew wrapper --gradle-version 8.9
 
       - name: Give execute permission to gradlew
         run: chmod +x ./gradlew
@@ -46,7 +50,7 @@ jobs:
           git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }} HEAD:${{ github.ref_name }}
 
       - name: Run clean and build
-        run: ./gradlew clean build --stacktrace
+        run: ./gradlew clean build --warning-mode all --stacktrace
 
       - name: Upload Debug APK as Artifact
         uses: actions/upload-artifact@v4
