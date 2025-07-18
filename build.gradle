@@ -1,3 +1,13 @@
+// pluginManagement bloğu, eklenti depolarını tanımlar
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+// buildscript bloğu, betik bağımlılıklarını tanımlar
 buildscript {
     repositories {
         google()
@@ -9,12 +19,7 @@ buildscript {
     }
 }
 
-plugins {
-    id 'com.android.application' version '8.1.0' apply false
-}
-
-apply plugin: 'com.android.application'
-
+// config.json dosyasını oku ve proje özelliklerini ayarla
 def configFile = rootProject.file("config.json")
 if (configFile.exists()) {
     def jsonSlurper = new groovy.json.JsonSlurper()
@@ -31,37 +36,10 @@ if (configFile.exists()) {
     }
 }
 
-android {
-    namespace project.ext.appId
-    compileSdk 35
-    defaultConfig {
-        applicationId project.ext.appId
-        minSdk 26
-        targetSdk 35
-        versionCode project.ext.versionCode
-        versionName project.ext.versionName
-        manifestPlaceholders = [admob_app_id: project.ext.admobAppId]
-        buildConfigField "String", "ADMOB_APP_ID", "\"${project.ext.admobAppId}\""
-        buildConfigField "String", "BANNER_AD_ID", "\"${project.ext.bannerAdId}\""
-        buildConfigField "String", "INTERSTITIAL_AD_ID", "\"${project.ext.interstitialAdId}\""
-        buildConfigField "String", "REWARDED_AD_ID", "\"${project.ext.rewardedAdId}\""
+// Tüm projeler için depolar
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
     }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
-    buildFeatures {
-        buildConfig true
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-}
-
-dependencies {
-    implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation 'com.google.android.gms:play-services-ads:23.2.0'
 }
