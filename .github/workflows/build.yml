@@ -1,4 +1,4 @@
-name: Clean Gradle Setup and Build APK
+name: Gradle 8.9 Clean Setup and Build
 
 on:
   push:
@@ -6,14 +6,14 @@ on:
       - main
 
 jobs:
-  clean-install-gradle:
+  build:
     runs-on: ubuntu-latest
 
     env:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
     steps:
-      - name: Checkout repo with GH_TOKEN
+      - name: Checkout repo
         uses: actions/checkout@v3
         with:
           token: ${{ secrets.GH_TOKEN }}
@@ -26,33 +26,32 @@ jobs:
 
       - name: Remove old Gradle wrapper files
         run: |
-          rm -f gradlew
-          rm -f gradlew.bat
+          rm -f gradlew gradlew.bat
           rm -rf gradle/wrapper
 
-      - name: Initialize new Gradle Wrapper with 8.9
-        run: |
-          mkdir -p gradle/wrapper
-          curl -sLo gradle-wrapper.zip https://services.gradle.org/distributions/gradle-8.9-bin.zip
-          unzip -q gradle-wrapper.zip -d gradle/wrapper/
-          rm gradle-wrapper.zip
-          ./gradlew wrapper --gradle-version 8.9
+      - name: Install Gradle CLI
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-version: 8.9
 
-      - name: Give execute permission to gradlew
-        run: chmod +x ./gradlew
+      - name: Generate new wrapper with Gradle 8.9
+        run: gradle wrapper --gradle-version 8.9
 
-      - name: Commit & Push new Gradle wrapper files
+      - name: Commit and push new wrapper files
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
           git add gradlew gradlew.bat gradle/wrapper
-          git diff --cached --quiet || git commit -m "Clean install: Gradle wrapper updated to 8.9"
+          git diff --cached --quiet || git commit -m "Update Gradle wrapper to 8.9"
           git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }} HEAD:${{ github.ref_name }}
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
 
       - name: Run clean and build
         run: ./gradlew clean build --warning-mode all --stacktrace
 
-      - name: Upload Debug APK as Artifact
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: debug-apk
