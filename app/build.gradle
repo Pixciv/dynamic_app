@@ -1,14 +1,24 @@
-// Move JsonSlurper import and logic inside a script block or task
+// buildscript block must come first to define dependencies for the build script
 buildscript {
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        // Add Groovy dependency for JsonSlurper
+        // Required for JsonSlurper
         classpath 'org.codehaus.groovy:groovy-json:3.0.21'
+        // Android Gradle Plugin (AGP) dependency
+        classpath 'com.android.tools.build:gradle:8.1.0'
     }
 }
+
+// Plugins block must come before other statements
+plugins {
+    id 'com.android.application' version '8.1.0' apply false
+}
+
+// Apply the plugin
+apply plugin: 'com.android.application'
 
 // Read config.json and set project properties
 def configFile = rootProject.file("config.json")
@@ -23,16 +33,9 @@ if (configFile.exists()) {
         project.ext.admobAppId = config.admob.appId
         project.ext.bannerAdId = config.admob.bannerId
         project.ext.interstitialAdId = config.admob.interstitialId
-        project.ext.rewar
-dedAdId = config.admob.rewardedId
+        project.ext.rewardedAdId = config.admob.rewardedId
     }
 }
-
-plugins {
-    id 'com.android.application' version '8.1.0' apply false
-}
-
-apply plugin: 'com.android.application'
 
 android {
     namespace project.ext.appId
@@ -72,5 +75,5 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation 'com.google.android.gms:play-services-ads:23.2.0' // Updated to latest version
+    implementation 'com.google.android.gms:play-services-ads:23.2.0' // Latest version as of July 2025
 }
