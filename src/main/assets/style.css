@@ -1,0 +1,389 @@
+/* Genel reset ve temel ayarlar */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body, html {
+  font-family: 'Fredoka', sans-serif;
+  height: 100%;
+  overflow: hidden;
+  background: linear-gradient(135deg, #fceabb 0%, #f8b500 100%);
+  color: #444;
+  user-select: none;
+}
+
+/* Arka plan canvas */
+#bg {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Ana konteyner */
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 20px 30px 40px;
+  background: transparent; /* Burası değiştirildi: Tamamen şeffaf oldu */
+  border-radius: 20px;
+  box-shadow: none; /* Gölgeyi de kaldırmanız gerekebilir, aksi takdirde hala bir "sınır" etkisi yaratabilir */
+  height: calc(100vh - 40px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #ff69b4 transparent;
+}
+
+.container::-webkit-scrollbar {
+  width: 8px;
+}
+.container::-webkit-scrollbar-thumb {
+  background-color: #ff69b4;
+  border-radius: 10px;
+}
+
+/* Başlıklar */
+header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+header h1 {
+  color: #ff4081;
+  font-size: 2.8rem;
+  text-shadow: 0 1px 3px rgba(255,105,180,0.6);
+  margin-bottom: 6px;
+  transition: color 0.3s ease;
+}
+header p {
+  font-size: 1.3rem;
+  color: #555;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  transition: color 0.3s ease;
+}
+
+/* Masal kartları ızgarası */
+.story-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 25px;
+}
+
+/* Masal kartı */
+.story-card {
+  background: white;
+  border-radius: 18px;
+  box-shadow: 0 12px 25px rgba(255, 105, 180, 0.18);
+  padding: 12px;
+  text-align: center;
+  cursor: default;
+  transition: transform 0.25s cubic-bezier(0.4,0,0.2,1), box-shadow 0.3s ease, background-color 0.4s ease;
+  user-select: none;
+  position: relative;
+}
+.story-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 18px 40px rgba(255, 105, 180, 0.35);
+}
+
+/* Kart içindeki resim */
+.story-card img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 14px;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 10px rgba(255,105,180,0.25);
+  transition: transform 0.3s ease;
+}
+.story-card:hover img {
+  transform: scale(1.05);
+}
+
+/* Masal başlığı */
+.story-card h3 {
+  font-size: 1.2rem;
+  color: #222;
+  margin-bottom: 14px;
+  min-height: 44px;
+  transition: color 0.3s ease;
+}
+
+/* Dinle/Durdur butonu */
+.story-card button {
+  background: linear-gradient(45deg, #ff4081, #f50057);
+  color: white;
+  font-weight: 700;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 14px;
+  font-size: 1rem;
+  box-shadow: 0 6px 18px rgba(245, 0, 87, 0.6);
+  cursor: pointer;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+  user-select: none;
+  outline-offset: 2px;
+}
+.story-card button:hover {
+  background: linear-gradient(45deg, #f50057, #ff1744);
+  box-shadow: 0 8px 22px rgba(255, 23, 68, 0.8);
+}
+
+/* 🔊 Masal dinlenirken aktif kart şeffaflaşır ve arka plan görünür */
+.story-card.playing {
+  background-color: rgba(255, 255, 255, 0.6);
+  box-shadow: 0 8px 30px rgba(255, 105, 180, 0.25);
+  backdrop-filter: blur(6px);
+  transition: all 0.4s ease;
+}
+
+/* Favori butonu (kalp) */
+.favorite-toggle {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 1.4rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #bbb;
+  transition: color 0.3s ease;
+  z-index: 2;
+  user-select: none;
+}
+.favorite-toggle:hover {
+  color: #ff69b4;
+}
+.story-card.favorited .favorite-toggle {
+  color: #ff1493;
+}
+
+/* Gece modu favori buton renkleri */
+body.dark .favorite-toggle {
+  color: #666;
+}
+body.dark .story-card.favorited .favorite-toggle {
+  color: #ff77d9;
+}
+
+/* Gece modu geçiş animasyonu */
+body, .container, .story-card, .story-card button {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Gece modu stilleri */
+body.dark {
+  background: #1c1c1e;
+  color: #eee;
+}
+body.dark .container {
+  background: rgba(30, 30, 32, 0.88);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+}
+body.dark .story-card {
+  background: #2c2c30;
+  color: #eee;
+  box-shadow: 0 8px 18px rgba(255, 255, 255, 0.05);
+}
+body.dark .story-card button {
+  background: linear-gradient(45deg, #7c4dff, #651fff);
+  box-shadow: 0 6px 18px rgba(103, 58, 183, 0.6);
+}
+body.dark .story-card button:hover {
+  background: linear-gradient(45deg, #9575cd, #7e57c2);
+}
+
+/* Gece modu başlık ve alt açıklama renkleri */
+body.dark header h1 {
+  color: #FFD700; /* Daha canlı mor */
+  text-shadow: 0 0 8px rgba(155, 48, 255, 0.9), 0 2px 6px rgba(0,0,0,0.6);
+}
+body.dark header p {
+  color: #ff69b4; /* Avuç pembe (hot pink) */
+  text-shadow: 0 0 8px rgba(255, 105, 180, 0.9);
+}
+
+body.dark #modeToggle {
+  background: #333;
+  color: #fff;
+}
+
+/* Gece modu masal başlık renkleri */
+body.dark .story-card h3 {
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+}
+
+/* Gece modu için favori buton */
+body.dark .favorite-toggle {
+  color: #666;
+}
+body.dark .story-card.favorited .favorite-toggle {
+  color: #ff77d9;
+}
+
+/* Gece/Gündüz modu butonu */
+#modeToggle {
+  position: fixed;
+  top: 22px;     /* Yukarı kaydırdım */
+  right: 12px;   /* Sağa biraz daha kaydırdım */
+  z-index: 999;
+  font-size: 0.7 rem; /* Küçülttüm */
+  background: #ffb6c1;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  cursor: pointer;
+  padding: 9px;
+  transition: all 0.3s ease;
+  user-select: none;
+}
+#modeToggle:hover {
+  background: #ff69b4;
+  transform: scale(1.1);
+}
+
+/* Gece modu buton rengi */
+body.dark #modeToggle {
+  background: #333;
+  color: #fff;
+}
+body.dark #modeToggle:hover {
+  background: #666;
+}
+
+/* Geri Dön butonu - Kart altında, görünürlük JS ile kontrol edilecek */
+#backButton {
+  display: none;
+  margin: 12px auto 0 auto;
+  background-color: #ff69b4;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 1rem;
+  box-shadow: 0 6px 18px rgba(245, 0, 87, 0.6);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+  user-select: none;
+  display: block; /* Bu, JS'de "inline-block" olarak ayarlandığında çakışabilir, ancak CSS önceliği verir */
+  width: fit-content;
+}
+#backButton:hover {
+  background-color: #ff1493;
+  box-shadow: 0 8px 22px rgba(255, 23, 68, 0.8);
+  transform: scale(1.05);
+}
+
+/* Gece modu geri dön butonu */
+body.dark #backButton {
+  background-color: #7c4dff;
+  box-shadow: 0 6px 18px rgba(103, 58, 183, 0.6);
+  color: white;
+}
+body.dark #backButton:hover {
+  background-color: #651fff;
+  box-shadow: 0 8px 22px rgba(121, 71, 255, 0.8);
+  transform: scale(1.05);
+}
+
+/* İlerleme çubuğu kapsayıcı */
+.progress-container {
+  width: 100%;
+  background: #eee;
+  border-radius: 12px;
+  overflow: hidden;
+  height: 12px;
+  margin-top: 8px;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+}
+
+body.dark .progress-container {
+  background: #555;
+}
+
+/* İlerleme çubuğu dolumu */
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background: #ff69b4;
+  border-radius: 12px;
+  transition: width 0.25s linear;
+}
+
+body.dark .progress-bar {
+  background: #ff85c1;
+}
+
+/* Süre göstergesi */
+.time-display {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 4px;
+  text-align: center;
+}
+
+body.dark .time-display {
+  color: #ddd;
+}
+
+/* Masal oynatılırken kartın alt kısmına ekleme */
+.story-card.playing .progress-container,
+.story-card.playing .time-display {
+  display: block;
+}
+
+/* ----------------------------------------------------- */
+/* Yeni Eklenen CSS Kuralları: İleri/Geri Sarma Butonları */
+/* ----------------------------------------------------- */
+
+/* İleri ve geri sarma tuşları için temel stil */
+.circle-skip {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  color: #ff4081;
+  border-radius: 50%;
+  transition: transform 0.2s ease;
+  /* Varsayılan olarak gizli */
+  display: none; /* Bu satır eklendi/güncellendi */
+}
+.circle-skip:hover {
+  transform: scale(1.2);
+}
+
+.circle-skip svg {
+  width: 24px;
+  height: 24px;
+  stroke: currentColor;
+}
+
+body.dark .circle-skip {
+  color: #ff85c1;
+}
+
+/* Sadece masal oynatılırken .circle-skip butonlarını göster */
+.story-card.playing .circle-skip {
+  display: block; /* Flex konteyner içindeki bir öğe olduğu için 'block' işe yarar */
+}
+
+/* Butonları içeren sarmalayıcı div */
+.playback-controls { /* .button-wrapper yerine daha açıklayıcı bir isim */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+/* ----------------------------------------------------- */
+/* Yeni Eklenen CSS Kuralları Sonu */
+/* ----------------------------------------------------- */
+

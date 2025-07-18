@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Masallar Yükleniyor...</title>
+  <style>
+    /* Global Reset */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      overflow: hidden; /* Kaydırmayı engelle */
+      font-family: 'Fredoka', sans-serif; /* Projenizdeki fontu kullanın */
+    }
+
+    /* Splash Screen Genel Stilleri */
+    .splash-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #fceabb 0%, #f8b500 100%); /* Projenizdeki tema rengi */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: #444; /* Genel metin rengi */
+      z-index: 9999; /* En üstte olmasını sağlar */
+      transition: opacity 0.5s ease-out; /* Geçiş animasyonu */
+    }
+
+    /* Logolar */
+    .splash-logo {
+      width: 150px; /* Belirli bir boyut veriyoruz, responsive ayarlar için medya sorgularını kullanacağız */
+      height: 150px; /* Logo 512x512 olduğu için kare olacak, bu boyut yeterli */
+      border-radius: 50%; /* Yuvarlak yapmak için */
+      object-fit: cover; /* Resmin boyutlara sığması için */
+      margin-bottom: 25px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Hafif gölge */
+      animation: rotateScale 2s ease-in-out infinite alternate, fadeIn 1.5s ease-in; /* Döndürme ve büyüme animasyonu */
+    }
+
+    /* Başlık */
+    .splash-title {
+      color: #ff4081; /* Başlık rengi */
+      font-size: 2.3rem; /* Mobil için uygun boyut */
+      font-weight: 700;
+      margin-bottom: 20px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      animation: fadeIn 1.5s ease-in;
+    }
+
+    /* Yükleme Çubuğu Kapsayıcısı */
+    .loading-bar-container {
+      width: 80%; /* Yüzde olarak genişlik, responsive olması için */
+      max-width: 300px; /* Masaüstünde çok büyümesini engelle */
+      background-color: rgba(255, 255, 255, 0.4);
+      border-radius: 5px;
+      height: 10px;
+      overflow: hidden;
+      margin-bottom: 10px; /* Yüzde metni için boşluk */
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+    }
+
+    .loading-bar {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #ff69b4, #ff1493); /* Çubuk rengi */
+      border-radius: 5px;
+      transition: width 0.1s linear; /* Yüzde değiştikçe akıcı geçiş */
+    }
+
+    /* Yüzde Metni */
+    .loading-percentage {
+      color: #666; /* Metin rengi */
+      font-size: 0.9rem;
+      margin-top: 5px;
+      animation: fadeIn 1.5s ease-in; /* Yeni eklenen metne animasyon */
+    }
+
+    /* Responsive Ayarlamalar */
+    @media (min-width: 600px) { /* Tablet ve üzeri */
+      .splash-logo {
+        width: 200px;
+        height: 200px;
+      }
+      .splash-title {
+        font-size: 3rem;
+      }
+      .loading-bar-container {
+        max-width: 400px;
+      }
+      .loading-percentage {
+        font-size: 1rem;
+      }
+    }
+
+    @media (min-width: 992px) { /* Masaüstü */
+      .splash-logo {
+        width: 250px;
+        height: 250px;
+      }
+      .splash-title {
+        font-size: 3.5rem;
+      }
+      .loading-bar-container {
+        max-width: 500px;
+      }
+      .loading-percentage {
+        font-size: 1.1rem;
+      }
+    }
+
+    /* Animasyonlar */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes rotateScale {
+      0% {
+        transform: rotate(0deg) scale(1);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      }
+      50% {
+        transform: rotate(180deg) scale(1.05); /* Hafifçe büyürken dönsün */
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3); /* Gölge de büyüsün */
+      }
+      100% {
+        transform: rotate(360deg) scale(1);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="splash-container">
+    <img src="logo.png" alt="ArvinApp Logo" class="splash-logo">
+    <h1 class="splash-title">Masallar Yükleniyor...</h1>
+    <div class="loading-bar-container">
+      <div class="loading-bar" id="loadingBar"></div>
+    </div>
+    <div class="loading-percentage" id="loadingPercentage">0%</div> </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const loadingBar = document.getElementById('loadingBar');
+      const loadingPercentage = document.getElementById('loadingPercentage'); // Yeni element
+      const splashDuration = 4000; // 4 saniye (milisaniye cinsinden)
+      const intervalTime = 50; // Her 50ms'de bir yüzdeyi güncelle
+
+      let currentProgress = 0;
+      const totalSteps = splashDuration / intervalTime;
+      const incrementPerStep = 100 / totalSteps;
+
+      const updateProgress = () => {
+        if (currentProgress < 100) {
+          currentProgress += incrementPerStep;
+          const roundedProgress = Math.min(Math.round(currentProgress), 100); // Yüzdeyi yuvarla ve 100'ü geçmesin
+          loadingBar.style.width = `${roundedProgress}%`;
+          loadingPercentage.textContent = `${roundedProgress}%`; // Yüzde metnini güncelle
+          setTimeout(updateProgress, intervalTime);
+        } else {
+            loadingBar.style.width = '100%'; // Tamamen dolduğundan emin ol
+            loadingPercentage.textContent = '100%'; // Tamamen 100% olduğundan emin ol
+        }
+      };
+
+      // Yükleme çubuğunu başlat
+      updateProgress();
+
+      // Belirtilen süre sonra index.html'e yönlendir
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, splashDuration);
+    });
+  </script>
+
+</body>
+</html>

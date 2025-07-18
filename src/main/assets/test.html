@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS Test Sayfası</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            color: #333;
+            text-align: center;
+        }
+        #message {
+            font-size: 24px;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="message">
+        JavaScript etkin mi? Bekleniyor...
+    </div>
+
+    <script>
+        // Sayfa yüklendiğinde bir alert gösterir
+        // Eğer bu alerti görüyorsanız, JavaScript etkin demektir.
+        alert("Merhaba! JavaScript etkinleşti.");
+
+        // 3 saniye sonra div içindeki metni değiştirir
+        setTimeout(function() {
+            var messageElement = document.getElementById('message');
+            if (messageElement) {
+                messageElement.textContent = "Evet! JavaScript Başarıyla Çalıştı!";
+                messageElement.style.color = "#28a745"; // Yeşil renge çevir
+                messageElement.style.fontWeight = "bold";
+            }
+        }, 3000); // 3000 milisaniye = 3 saniye
+    </script>
+
+</body>
+</html>

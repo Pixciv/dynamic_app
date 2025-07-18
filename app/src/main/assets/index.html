@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>📚 İnternetsiz Sesli Masallar</title>
+  <meta name="theme-color" content="#fff" id="themeColor" />
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <canvas id="bg"></canvas>
+
+  <button id="modeToggle" title="Gece/Gündüz Modu">🌙</button>
+
+  <div class="container">
+    <header>
+      <h1>📚 İnternetsiz Sesli Masallar</h1>
+      <p>Masalını seç, dinlemeye başla!</p>
+    </header>
+    <main id="stories" class="story-grid"></main>
+  </div>
+
+  <script src="three.min.js"></script>
+
+  <script src="threebg.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
