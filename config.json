@@ -1,0 +1,14 @@
+{
+  "appName": "Sesli Masallar",
+  "packageName": "com.arvinapp.internetsizseslimasallar",
+  "versionName": "5.1.0",
+  "versionCode": 6,
+
+  "admob": {
+    "appId": "ca-app-pub-1981972909540128~2702482048",
+    "testDeviceIds": ["E371BF960E689BFD7FEF9447A872DD49"],
+    "bannerId": "ca-app-pub-1981972909540128/6116464519",
+    "interstitialId": "ca-app-pub-1981972909540128/4863749136",
+    "rewardedId": "ca-app-pub-1981972909540128/1171916130"
+  }
+}
