@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    
-    <!-- Gereksiz tekrarlar silindi -->
+    <!-- Dinamik olarak config.json'dan alınacak, artık "package=" kullanılmıyor -->
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
@@ -29,26 +29,21 @@
             android:name=".DebugActivity"
             android:screenOrientation="portrait" />
 
-        <!-- AdMob için gerekli AdActivity -->
         <activity
             android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:theme="@android:style/Theme.Translucent" />
 
-        <!-- GMS sürüm sabiti -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <!-- AdMob App ID artık manifestPlaceholders ile build.gradle'dan gelir -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="${admob_app_id}" />
 
-        <!-- Apache legacy -->
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
     </application>
-
 </manifest>
