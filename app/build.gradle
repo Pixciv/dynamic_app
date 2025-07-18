@@ -1,3 +1,5 @@
+// build.gradle
+
 import groovy.json.JsonSlurper
 
 // config.json verisini en başta oku
