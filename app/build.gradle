@@ -1,22 +1,23 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace project.ext.appId
-    compileSdkVersion 34
+    // Burada compileSdkVersion ve namespace mutlaka olmalı
+    compileSdkVersion 35
+    namespace rootProject.ext.appId
 
     defaultConfig {
-        applicationId project.ext.appId
-        minSdkVersion 21
-        targetSdkVersion 34
-        versionCode project.ext.versionCode
-        versionName project.ext.versionName
+        applicationId rootProject.ext.appId
+        minSdkVersion 26
+        targetSdkVersion 35
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
 
-        manifestPlaceholders = [admob_app_id: project.ext.admobAppId]
+        manifestPlaceholders = [admob_app_id: rootProject.ext.admobAppId]
 
-        buildConfigField "String", "ADMOB_APP_ID", "\"${project.ext.admobAppId}\""
-        buildConfigField "String", "BANNER_AD_ID", "\"${project.ext.bannerAdId}\""
-        buildConfigField "String", "INTERSTITIAL_AD_ID", "\"${project.ext.interstitialAdId}\""
-        buildConfigField "String", "REWARDED_AD_ID", "\"${project.ext.rewardedAdId}\""
+        buildConfigField "String", "ADMOB_APP_ID", "\"${rootProject.ext.admobAppId}\""
+        buildConfigField "String", "BANNER_AD_ID", "\"${rootProject.ext.bannerAdId}\""
+        buildConfigField "String", "INTERSTITIAL_AD_ID", "\"${rootProject.ext.interstitialAdId}\""
+        buildConfigField "String", "REWARDED_AD_ID", "\"${rootProject.ext.rewardedAdId}\""
     }
 
     buildTypes {
