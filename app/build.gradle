@@ -1,47 +1,15 @@
-plugins {
-    id 'com.android.application'
-}
-
 android {
-    compileSdkVersion 35
-    namespace rootProject.ext.appId
-
     defaultConfig {
-        applicationId rootProject.ext.appId
-        minSdkVersion 26
-        targetSdkVersion 35
-        versionCode rootProject.ext.versionCode
-        versionName rootProject.ext.versionName
-
-        // AdMob manifest placeholder
-        manifestPlaceholders = [admob_app_id: rootProject.ext.admobAppId]
-
-        // AdMob bilgilerini BuildConfig ile erişilebilir hale getir
-        buildConfigField "String", "ADMOB_APP_ID", "\"${rootProject.ext.admobAppId}\""
-        buildConfigField "String", "BANNER_AD_ID", "\"${rootProject.ext.bannerAdId}\""
-        buildConfigField "String", "INTERSTITIAL_AD_ID", "\"${rootProject.ext.interstitialAdId}\""
-        buildConfigField "String", "REWARDED_AD_ID", "\"${rootProject.ext.rewardedAdId}\""
-    }
-
-    buildFeatures {
-        buildConfig true
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        // ...
+        buildConfigField "String", "BANNER_AD_ID", "\"${project.admobBannerId}\""
+        buildConfigField "String", "INTERSTITIAL_AD_ID", "\"${project.admobInterstitialId}\""
+        buildConfigField "String", "ADMOB_APP_ID", "\"${project.admobAppId}\""
     }
 }
 
-dependencies {
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.9.0'
-    implementation 'com.google.android.gms:play-services-ads:24.4.0'
+afterEvaluate {
+    def config = new groovy.json.JsonSlurper().parse(file("../config.json"))
+    project.ext.admobAppId = config.admob.appId
+    project.ext.admobBannerId = config.admob.bannerId
+    project.ext.admobInterstitialId = config.admob.interstitialId
 }
