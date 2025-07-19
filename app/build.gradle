@@ -1,17 +1,22 @@
-plugins {
-    id 'com.android.application' version '8.1.0'
-}
+apply plugin: 'com.android.application'
 
 android {
-    namespace 'com.ornek.app'
-    compileSdk 34
+    namespace project.ext.appId
+    compileSdkVersion 34
 
     defaultConfig {
-        applicationId "com.ornek.app"
-        minSdk 21
-        targetSdk 34
-        versionCode 1
-        versionName "1.0"
+        applicationId project.ext.appId
+        minSdkVersion 21
+        targetSdkVersion 34
+        versionCode project.ext.versionCode
+        versionName project.ext.versionName
+
+        manifestPlaceholders = [admob_app_id: project.ext.admobAppId]
+
+        buildConfigField "String", "ADMOB_APP_ID", "\"${project.ext.admobAppId}\""
+        buildConfigField "String", "BANNER_AD_ID", "\"${project.ext.bannerAdId}\""
+        buildConfigField "String", "INTERSTITIAL_AD_ID", "\"${project.ext.interstitialAdId}\""
+        buildConfigField "String", "REWARDED_AD_ID", "\"${project.ext.rewardedAdId}\""
     }
 
     buildTypes {
@@ -20,9 +25,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.11.0'
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation 'com.google.android.gms:play-services-ads:23.2.0'
 }
