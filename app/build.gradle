@@ -1,7 +1,4 @@
-apply plugin: 'com.android.application'
-
 android {
-    // Burada compileSdkVersion ve namespace mutlaka olmalı
     compileSdkVersion 35
     namespace rootProject.ext.appId
 
@@ -20,6 +17,10 @@ android {
         buildConfigField "String", "REWARDED_AD_ID", "\"${rootProject.ext.rewardedAdId}\""
     }
 
+    buildFeatures {
+        buildConfig true
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -31,9 +32,4 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-}
-
-dependencies {
-    implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation 'com.google.android.gms:play-services-ads:23.2.0'
 }
