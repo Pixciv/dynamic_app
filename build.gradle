@@ -14,15 +14,16 @@ if (configFile.exists()) {
     def jsonSlurper = new groovy.json.JsonSlurper()
     def config = jsonSlurper.parseText(configFile.text)
 
-    project.ext.appId = config.packageName
-    project.ext.versionCode = config.versionCode
-    project.ext.versionName = config.versionName
+    // *** Mutlaka rootProject.ext olarak tanımla ***
+    rootProject.ext.appId = config.packageName
+    rootProject.ext.versionCode = config.versionCode
+    rootProject.ext.versionName = config.versionName
 
     if (config.admob) {
-        project.ext.admobAppId = config.admob.appId
-        project.ext.bannerAdId = config.admob.bannerId
-        project.ext.interstitialAdId = config.admob.interstitialId
-        project.ext.rewardedAdId = config.admob.rewardedId
+        rootProject.ext.admobAppId = config.admob.appId
+        rootProject.ext.bannerAdId = config.admob.bannerId
+        rootProject.ext.interstitialAdId = config.admob.interstitialId
+        rootProject.ext.rewardedAdId = config.admob.rewardedId
     }
 }
 
