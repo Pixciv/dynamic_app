@@ -20,6 +20,7 @@ import android.view.*;
 import android.view.View.*;
 import android.view.animation.*;
 import android.webkit.*;
+import com.arvinapp.internetsizmasallar.BuildConfig;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.*;
@@ -213,4 +214,4 @@ public class MainActivity extends Activity {
 	public int getDisplayHeightPixels() {
 		return getResources().getDisplayMetrics().heightPixels;
 	}
-}
+}
