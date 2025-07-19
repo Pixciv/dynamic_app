@@ -1,17 +1,18 @@
 package com.arvinapp.internetsizmasallar;
 
-import android.animation.*;
-import android.app.*;
-import android.content.*;
-import android.os.*;
-import android.webkit.*;
-import android.widget.*;
+import android.app.Activity;
 import android.graphics.Bitmap;
-import com.arvinapp.internetsizmasallar.R;
-import com.google.android.gms.ads.*;
-import com.google.android.gms.ads.interstitial.InterstitialAd;
-import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
+import android.os.Bundle;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.Toast;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.InterstitialAdLoadCallback;
 import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.MobileAds;
 
 public class MainActivity extends Activity {
 
@@ -30,7 +31,7 @@ public class MainActivity extends Activity {
         MobileAds.initialize(this);
 
         // Dinamik AdMob Banner ID config.json'dan buildConfigField ile geliyor
-        _ad_unit_id = BuildConfig.ADMOB_BANNER_ID;
+        _ad_unit_id = BuildConfig.BANNER_AD_ID;
         initializeLogic();
     }
 
