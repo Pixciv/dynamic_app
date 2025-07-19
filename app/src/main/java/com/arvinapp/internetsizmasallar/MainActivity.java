@@ -9,18 +9,18 @@ import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.InterstitialAd;
-import com.google.android.gms.ads.InterstitialAdLoadCallback;
-import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
+
+import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
+import com.google.android.gms.ads.LoadAdError;
 
 public class MainActivity extends Activity {
 
     private String _ad_unit_id;
     private WebView webview1;
     private AdView adview1;
-    private InterstitialAd myInterstialAd;
-    private InterstitialAdLoadCallback _myInterstialAd_interstitial_ad_load_callback;
+    private InterstitialAd myInterstitialAd;
 
     @Override
     protected void onCreate(Bundle _savedInstanceState) {
@@ -30,8 +30,9 @@ public class MainActivity extends Activity {
 
         MobileAds.initialize(this);
 
-        // Dinamik AdMob Banner ID config.json'dan buildConfigField ile geliyor
-        _ad_unit_id = BuildConfig.BANNER_AD_ID;
+        // strings.xml'den banner ID çekiliyor (config.json'dan yazılan)
+        _ad_unit_id = getString(R.string.banner_ad_unit_id);
+
         initializeLogic();
     }
 
@@ -43,43 +44,39 @@ public class MainActivity extends Activity {
 
         webview1.setWebViewClient(new WebViewClient() {
             @Override
-            public void onPageStarted(WebView _param1, String _param2, Bitmap _param3) {
-                super.onPageStarted(_param1, _param2, _param3);
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                super.onPageStarted(view, url, favicon);
             }
 
             @Override
-            public void onPageFinished(WebView _param1, String _param2) {
-                super.onPageFinished(_param1, _param2);
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
             }
         });
+    }
 
-        _myInterstialAd_interstitial_ad_load_callback = new InterstitialAdLoadCallback() {
+    private void initializeLogic() {
+        webview1.loadUrl("file:///android_asset/splash.html");
+
+        // Banner reklamı yükle
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adview1.loadAd(adRequest);
+
+        // Geçiş reklamı (interstitial) yükle
+        InterstitialAd.load(this, _ad_unit_id, adRequest, new InterstitialAdLoadCallback() {
             @Override
-            public void onAdLoaded(InterstitialAd _param1) {
-                myInterstialAd = _param1;
-                if (myInterstialAd != null) {
-                    myInterstialAd.show(MainActivity.this);
-                } else {
-                    showMessage("Error: InterstitialAd not loaded!");
+            public void onAdLoaded(InterstitialAd ad) {
+                myInterstitialAd = ad;
+                if (myInterstitialAd != null) {
+                    myInterstitialAd.show(MainActivity.this);
                 }
             }
 
             @Override
-            public void onAdFailedToLoad(LoadAdError _param1) {
-                // Reklam yüklenemediğinde yapılacak işlemler
+            public void onAdFailedToLoad(LoadAdError loadAdError) {
+                showMessage("Interstitial yüklenemedi: " + loadAdError.getMessage());
             }
-        };
-    }
-
-    private void initializeLogic() {
-        String splashUrl = "file:///android_asset/splash.html";
-        webview1.loadUrl(splashUrl);
-
-        AdRequest adRequest = new AdRequest.Builder().build();
-        adview1.loadAd(adRequest);
-
-        AdRequest interstitialAdRequest = new AdRequest.Builder().build();
-        InterstitialAd.load(MainActivity.this, _ad_unit_id, interstitialAdRequest, _myInterstialAd_interstitial_ad_load_callback);
+        });
     }
 
     @Override
