@@ -1,15 +1,3 @@
-// buildscript bloğu, betik bağımlılıklarını tanımlar
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'org.codehaus.groovy:groovy-json:3.0.21'
-        classpath 'com.android.tools.build:gradle:8.1.0'
-    }
-}
-
 // config.json dosyasını oku ve proje özelliklerini ayarla
 def configFile = rootProject.file("config.json")
 if (configFile.exists()) {
@@ -27,7 +15,6 @@ if (configFile.exists()) {
     }
 }
 
-// Tüm projeler için depolar
 allprojects {
     repositories {
         google()
