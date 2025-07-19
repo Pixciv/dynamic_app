@@ -15,13 +15,15 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      # Eğer kesin cache temizlenecekse key değiştirilir,
+      # aksi halde bu adım cache yükler
       - name: Cache Gradle packages
         uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: gradle-cache-${{ hashFiles('**/*.gradle', '**/gradle-wrapper.properties') }}
+          key: gradle-cache-${{ github.run_id }}  # Her run'da yeni key, yani temiz cache
           restore-keys: gradle-cache-
 
       - name: Set up JDK 17
@@ -29,6 +31,12 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
+
+      - name: Remove existing Gradle wrapper and caches (clean start)
+        run: |
+          rm -rf ~/.gradle/wrapper
+          rm -rf ~/.gradle/caches
+          rm -rf gradle-8.*
 
       - name: Download and Install Gradle 8.14.3
         run: |
