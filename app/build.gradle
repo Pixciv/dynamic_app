@@ -4,19 +4,19 @@ plugins {
 
 android {
     namespace project.ext.appId
-    compileSdk 34
+    compileSdk = 34
 
     defaultConfig {
-        applicationId project.ext.appId
-        minSdk 21
-        targetSdk 34
-        versionCode project.ext.versionCode
-        versionName project.ext.versionName
+        applicationId = project.ext.appId
+        minSdk = 21
+        targetSdk = 34
+        versionCode = project.ext.versionCode
+        versionName = project.ext.versionName
     }
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled = false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
