@@ -4,12 +4,10 @@ import android.animation.*;
 import android.app.*;
 import android.content.*;
 import android.os.*;
-import android.text.*;
 import android.webkit.*;
 import android.widget.*;
+import android.graphics.Bitmap;
 import com.google.android.gms.ads.*;
-import org.json.*;
-import java.io.*;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.google.android.gms.ads.LoadAdError;
@@ -17,7 +15,6 @@ import com.google.android.gms.ads.LoadAdError;
 public class MainActivity extends Activity {
 
     private String _ad_unit_id;
-    public String selectedMasal;
     private WebView webview1;
     private AdView adview1;
     private InterstitialAd myInterstialAd;
@@ -31,7 +28,7 @@ public class MainActivity extends Activity {
 
         MobileAds.initialize(this);
 
-        // Dinamik AdMob App ID ve Banner ID config.json'dan alınıyor
+        // Dinamik AdMob Banner ID config.json'dan buildConfigField ile geliyor
         _ad_unit_id = BuildConfig.ADMOB_BANNER_ID;
         initializeLogic();
     }
@@ -67,21 +64,18 @@ public class MainActivity extends Activity {
 
             @Override
             public void onAdFailedToLoad(LoadAdError _param1) {
-                // Error handling for ad loading
+                // Reklam yüklenemediğinde yapılacak işlemler
             }
         };
     }
 
     private void initializeLogic() {
-        // Dinamik olarak config.json'dan URL al
         String splashUrl = "file:///android_asset/splash.html";
         webview1.loadUrl(splashUrl);
 
-        // AdMob reklam yükle
         AdRequest adRequest = new AdRequest.Builder().build();
         adview1.loadAd(adRequest);
 
-        // Interstitial reklam yükle
         AdRequest interstitialAdRequest = new AdRequest.Builder().build();
         InterstitialAd.load(MainActivity.this, _ad_unit_id, interstitialAdRequest, _myInterstialAd_interstitial_ad_load_callback);
     }
