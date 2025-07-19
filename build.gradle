@@ -3,8 +3,32 @@ buildscript {
         google()
         mavenCentral()
     }
-
     dependencies {
         classpath 'com.android.tools.build:gradle:8.1.0'
+        classpath 'org.codehaus.groovy:groovy-json:3.0.21'
+    }
+}
+
+def configFile = rootProject.file("config.json")
+if (configFile.exists()) {
+    def jsonSlurper = new groovy.json.JsonSlurper()
+    def config = jsonSlurper.parseText(configFile.text)
+
+    project.ext.appId = config.packageName
+    project.ext.versionCode = config.versionCode
+    project.ext.versionName = config.versionName
+
+    if (config.admob) {
+        project.ext.admobAppId = config.admob.appId
+        project.ext.bannerAdId = config.admob.bannerId
+        project.ext.interstitialAdId = config.admob.interstitialId
+        project.ext.rewardedAdId = config.admob.rewardedId
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
     }
 }
