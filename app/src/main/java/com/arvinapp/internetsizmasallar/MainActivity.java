@@ -7,6 +7,7 @@ import android.os.*;
 import android.webkit.*;
 import android.widget.*;
 import android.graphics.Bitmap;
+import com.arvinapp.internetsizmasallar.R;
 import com.google.android.gms.ads.*;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
