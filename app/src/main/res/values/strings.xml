@@ -1,4 +1,5 @@
 <resources>
     <!-- Bu değer Node.js scripti tarafından config.json'dan dinamik olarak yazılır -->
     <string name="app_name" translatable="false">Sesli Masallar</string>
+    <string name="banner_ad_unit_id">ca-app-pub-1981972909540128/6116464519</string>
 </resources>
