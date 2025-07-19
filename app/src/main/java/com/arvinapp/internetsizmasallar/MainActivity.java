@@ -1,48 +1,36 @@
-package com.arvinapp.internetsizmasallar;
+package com.arvinapp.internetsizseslimasallar;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.webkit.WebSettings;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.interstitial.InterstitialAd;
-import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.InterstitialAdLoadCallback;
 import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.MobileAds;
 
 public class MainActivity extends Activity {
 
     private WebView webview1;
     private AdView adview1;
     private InterstitialAd myInterstitialAd;
-    private String bannerAdId;
-    private String interstitialAdId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        bannerAdId = BuildConfig.BANNER_AD_ID;
-        interstitialAdId = BuildConfig.INTERSTITIAL_AD_ID;
-
-        initializeViews();
-        initializeLogic();
-    }
-
-    private void initializeViews() {
+        // WebView ve AdView başlat
         webview1 = findViewById(R.id.webview1);
         adview1 = findViewById(R.id.adview1);
 
-        WebSettings settings = webview1.getSettings();
-        settings.setJavaScriptEnabled(true);
-        settings.setSupportZoom(true);
-
+        webview1.getSettings().setJavaScriptEnabled(true);
+        webview1.getSettings().setSupportZoom(true);
         webview1.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
@@ -54,51 +42,63 @@ public class MainActivity extends Activity {
                 super.onPageFinished(view, url);
             }
         });
-    }
 
-    private void initializeLogic() {
-        MobileAds.initialize(this, initializationStatus -> {});
+        // AdMob başlat
+        MobileAds.initialize(this);
 
-        webview1.loadUrl("file:///android_asset/splash.html");
+        // Banner reklam yükle
+        AdRequest bannerAdRequest = new AdRequest.Builder().build();
+        adview1.loadAd(bannerAdRequest);
 
-        AdRequest adRequest = new AdRequest.Builder().build();
-        adview1.loadAd(adRequest);
-
-        InterstitialAd.load(this, interstitialAdId, adRequest, new InterstitialAdLoadCallback() {
-            @Override
-            public void onAdLoaded(InterstitialAd ad) {
-                myInterstitialAd = ad;
-                if (myInterstitialAd != null) {
-                    myInterstitialAd.show(MainActivity.this);
+        // Interstitial reklam yükle
+        AdRequest interstitialAdRequest = new AdRequest.Builder().build();
+        InterstitialAd.load(this, BuildConfig.INTERSTITIAL_AD_ID, interstitialAdRequest,
+            new InterstitialAdLoadCallback() {
+                @Override
+                public void onAdLoaded(InterstitialAd interstitialAd) {
+                    myInterstitialAd = interstitialAd;
+                    if (myInterstitialAd != null) {
+                        myInterstitialAd.show(MainActivity.this);
+                    } else {
+                        showMessage("Interstitial reklam yüklenemedi.");
+                    }
                 }
-            }
 
-            @Override
-            public void onAdFailedToLoad(LoadAdError adError) {
-                showMessage("Interstitial failed: " + adError.getMessage());
-            }
-        });
+                @Override
+                public void onAdFailedToLoad(LoadAdError adError) {
+                    showMessage("Interstitial reklam hatası: " + adError.getMessage());
+                }
+            });
+
+        // WebView içerik yükle
+        webview1.loadUrl("file:///android_asset/splash.html");
     }
 
     @Override
     protected void onDestroy() {
-        if (adview1 != null) adview1.destroy();
+        if (adview1 != null) {
+            adview1.destroy();
+        }
         super.onDestroy();
     }
 
     @Override
     protected void onPause() {
-        if (adview1 != null) adview1.pause();
+        if (adview1 != null) {
+            adview1.pause();
+        }
         super.onPause();
     }
 
     @Override
     protected void onResume() {
-        if (adview1 != null) adview1.resume();
+        if (adview1 != null) {
+            adview1.resume();
+        }
         super.onResume();
     }
 
-    public void showMessage(String s) {
-        Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
+    private void showMessage(String msg) {
+        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
     }
 }
