@@ -3,25 +3,26 @@ plugins {
 }
 
 android {
-    namespace project.ext.appId
-    compileSdk = 34
+    namespace 'com.ornek.app'
+    compileSdk 34
 
     defaultConfig {
-        applicationId = project.ext.appId
-        minSdk = 21
-        targetSdk = 34
-        versionCode = project.ext.versionCode
-        versionName = project.ext.versionName
+        applicationId "com.ornek.app"
+        minSdk 21
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
     }
 
     buildTypes {
         release {
-            minifyEnabled = false
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 }
 
 dependencies {
-    implementation 'com.google.android.gms:play-services-ads:23.0.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.11.0'
 }
