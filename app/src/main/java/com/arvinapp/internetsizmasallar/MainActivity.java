@@ -5,42 +5,43 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.webkit.WebSettings;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
-
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.google.android.gms.ads.LoadAdError;
 
 public class MainActivity extends Activity {
 
-    private String _ad_unit_id;
     private WebView webview1;
     private AdView adview1;
     private InterstitialAd myInterstitialAd;
+    private String bannerAdId;
+    private String interstitialAdId;
 
     @Override
-    protected void onCreate(Bundle _savedInstanceState) {
-        super.onCreate(_savedInstanceState);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initialize(_savedInstanceState);
 
-        MobileAds.initialize(this);
+        bannerAdId = BuildConfig.BANNER_AD_ID;
+        interstitialAdId = BuildConfig.INTERSTITIAL_AD_ID;
 
-        // strings.xml'den banner ID çekiliyor (config.json'dan yazılan)
-        _ad_unit_id = getString(R.string.banner_ad_unit_id);
-
+        initializeViews();
         initializeLogic();
     }
 
-    private void initialize(Bundle _savedInstanceState) {
+    private void initializeViews() {
         webview1 = findViewById(R.id.webview1);
-        webview1.getSettings().setJavaScriptEnabled(true);
-        webview1.getSettings().setSupportZoom(true);
         adview1 = findViewById(R.id.adview1);
+
+        WebSettings settings = webview1.getSettings();
+        settings.setJavaScriptEnabled(true);
+        settings.setSupportZoom(true);
 
         webview1.setWebViewClient(new WebViewClient() {
             @Override
@@ -56,14 +57,14 @@ public class MainActivity extends Activity {
     }
 
     private void initializeLogic() {
+        MobileAds.initialize(this, initializationStatus -> {});
+
         webview1.loadUrl("file:///android_asset/splash.html");
 
-        // Banner reklamı yükle
         AdRequest adRequest = new AdRequest.Builder().build();
         adview1.loadAd(adRequest);
 
-        // Geçiş reklamı (interstitial) yükle
-        InterstitialAd.load(this, _ad_unit_id, adRequest, new InterstitialAdLoadCallback() {
+        InterstitialAd.load(this, interstitialAdId, adRequest, new InterstitialAdLoadCallback() {
             @Override
             public void onAdLoaded(InterstitialAd ad) {
                 myInterstitialAd = ad;
@@ -73,37 +74,31 @@ public class MainActivity extends Activity {
             }
 
             @Override
-            public void onAdFailedToLoad(LoadAdError loadAdError) {
-                showMessage("Interstitial yüklenemedi: " + loadAdError.getMessage());
+            public void onAdFailedToLoad(LoadAdError adError) {
+                showMessage("Interstitial failed: " + adError.getMessage());
             }
         });
     }
 
     @Override
-    public void onDestroy() {
+    protected void onDestroy() {
+        if (adview1 != null) adview1.destroy();
         super.onDestroy();
-        if (adview1 != null) {
-            adview1.destroy();
-        }
     }
 
     @Override
-    public void onPause() {
+    protected void onPause() {
+        if (adview1 != null) adview1.pause();
         super.onPause();
-        if (adview1 != null) {
-            adview1.pause();
-        }
     }
 
     @Override
-    public void onResume() {
+    protected void onResume() {
+        if (adview1 != null) adview1.resume();
         super.onResume();
-        if (adview1 != null) {
-            adview1.resume();
-        }
     }
 
-    public void showMessage(String _s) {
-        Toast.makeText(getApplicationContext(), _s, Toast.LENGTH_SHORT).show();
+    public void showMessage(String s) {
+        Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
     }
 }
