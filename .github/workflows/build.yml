@@ -30,12 +30,12 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      - name: Download and Install Gradle 8.5
+      - name: Download and Install Gradle 8.14.3
         run: |
-          wget https://services.gradle.org/distributions/gradle-8.5-bin.zip
-          unzip -q gradle-8.5-bin.zip
-          echo "GRADLE_HOME=$PWD/gradle-8.5" >> $GITHUB_ENV
-          echo "$PWD/gradle-8.5/bin" >> $GITHUB_PATH
+          wget https://services.gradle.org/distributions/gradle-8.14.3-bin.zip
+          unzip -q gradle-8.14.3-bin.zip
+          echo "GRADLE_HOME=$PWD/gradle-8.14.3" >> $GITHUB_ENV
+          echo "$PWD/gradle-8.14.3/bin" >> $GITHUB_PATH
 
       - name: Grant execute permission to gradlew
         run: chmod +x gradlew || true
