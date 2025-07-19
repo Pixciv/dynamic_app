@@ -1,8 +1,24 @@
-// config.json dosyasını oku ve proje özelliklerini ayarla
+// Root build.gradle (sadece Java için, Kotlin içermez)
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        // config.json için gerekli
+        classpath 'org.codehaus.groovy:groovy-json:3.0.21'
+        // Android Gradle Plugin
+        classpath 'com.android.tools.build:gradle:8.1.0'
+    }
+}
+
+// config.json'dan bilgileri al ve tüm projeye yay
 def configFile = rootProject.file("config.json")
 if (configFile.exists()) {
     def jsonSlurper = new groovy.json.JsonSlurper()
     def config = jsonSlurper.parseText(configFile.text)
+
     project.ext.appId = config.packageName
     project.ext.versionCode = config.versionCode
     project.ext.versionName = config.versionName
