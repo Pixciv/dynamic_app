@@ -1,3 +1,9 @@
+
+plugins {
+    id 'com.android.application'
+}
+
+
 android {
     compileSdkVersion 35
     namespace rootProject.ext.appId
