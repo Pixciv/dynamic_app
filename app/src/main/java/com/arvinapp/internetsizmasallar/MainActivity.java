@@ -26,7 +26,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle _savedInstanceState) {
         super.onCreate(_savedInstanceState);
-        setContentView(R.layout.main);
+        setContentView(R.layout.activity_main);
         initialize(_savedInstanceState);
 
         MobileAds.initialize(this);
