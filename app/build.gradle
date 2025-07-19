@@ -13,8 +13,10 @@ android {
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
 
+        // AdMob manifest placeholder
         manifestPlaceholders = [admob_app_id: rootProject.ext.admobAppId]
 
+        // AdMob bilgilerini BuildConfig ile erişilebilir hale getir
         buildConfigField "String", "ADMOB_APP_ID", "\"${rootProject.ext.admobAppId}\""
         buildConfigField "String", "BANNER_AD_ID", "\"${rootProject.ext.bannerAdId}\""
         buildConfigField "String", "INTERSTITIAL_AD_ID", "\"${rootProject.ext.interstitialAdId}\""
